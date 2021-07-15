@@ -23,7 +23,6 @@ const LoginPage: React.FC = () => {
   return (
     <Grid container>
       <Grid item xs={12} md={5}>
-        Hello
         {cardToRender}
       </Grid>
       <Grid item xs={12} md={7}>

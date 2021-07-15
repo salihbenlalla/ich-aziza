@@ -11,16 +11,39 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { ChangeEvent, useState } from 'react';
 import { useStyles } from '../styles/styles';
 import type { SetCurrentCardProp } from '../../types/LoginPageTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  signUp,
+  setLoading,
+  setError,
+  selectLoading,
+  selectError,
+} from '../../redux';
 
 const SignUpCard: React.FC<SetCurrentCardProp> = ({ setCurrentCard }) => {
-  const [firstName, setFirstName] = useState<String>('');
-  const [lastName, setLastName] = useState<String>('');
-  const [email, setEmail] = useState<String>('');
-  const [password, setPassword] = useState<String>('');
-  const [confirmPassword, setConfirmPassword] = useState<String>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+
+  const handleSubmit = async () => {
+    dispatch(setLoading(true));
+    await dispatch(
+      signUp({ email, password }, () => {
+        dispatch(setError('error on signing up'));
+        dispatch(setLoading(false));
+      })
+    );
+    dispatch(setLoading(false));
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -66,6 +89,16 @@ const SignUpCard: React.FC<SetCurrentCardProp> = ({ setCurrentCard }) => {
         gutterBottom>
         Fill in the fields below to sign up for an account.
       </Typography>
+      {error && (
+        <Typography
+          variant="body1"
+          align="center"
+          color="error"
+          display="block"
+          gutterBottom>
+          {error}
+        </Typography>
+      )}
       <form noValidate className={classes.form}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -174,6 +207,8 @@ const SignUpCard: React.FC<SetCurrentCardProp> = ({ setCurrentCard }) => {
               fullWidth
               variant="contained"
               color="primary"
+              onClick={handleSubmit}
+              disabled={loading}
               className={classes.actionButton}>
               Sign up
             </Button>

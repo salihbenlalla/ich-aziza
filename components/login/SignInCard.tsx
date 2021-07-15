@@ -11,11 +11,17 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { ChangeEvent, useState } from 'react';
 import { useStyles } from '../styles/styles';
 import type { SetCurrentCardProp } from '../../types/LoginPageTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import { signIn, selectLoading, setLoading, selectError } from '../../redux';
 
 const SignInCard: React.FC<SetCurrentCardProp> = ({ setCurrentCard }) => {
-  const [email, setEmail] = useState<String>('');
-  const [password, setPassword] = useState<String>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
@@ -37,6 +43,18 @@ const SignInCard: React.FC<SetCurrentCardProp> = ({ setCurrentCard }) => {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
+  };
+
+  const handleSubmit = async () => {
+    dispatch(setLoading(true));
+    await dispatch(
+      signIn({ email, password }, () => {
+        dispatch(setLoading(false));
+        console.log('Error signing in ');
+      })
+    );
+    console.log(loading);
+    dispatch(setLoading(false));
   };
 
   return (
@@ -65,6 +83,16 @@ const SignInCard: React.FC<SetCurrentCardProp> = ({ setCurrentCard }) => {
           Sign up {'\u27F6'}
         </MuiLink>
       </Typography>
+      {error && (
+        <Typography
+          variant="body2"
+          align="center"
+          color="error"
+          display="block"
+          gutterBottom>
+          {error}
+        </Typography>
+      )}
       <form noValidate className={classes.form}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -123,6 +151,8 @@ const SignInCard: React.FC<SetCurrentCardProp> = ({ setCurrentCard }) => {
               fullWidth
               variant="contained"
               color="primary"
+              onClick={handleSubmit}
+              disabled={loading}
               className={classes.actionButton}>
               Sign in
             </Button>
