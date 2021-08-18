@@ -10,19 +10,13 @@ import FirebaseAuthProvider from '../firebase/FirebaseAuthProvider';
 import theme from '../styles/MuiTheme';
 
 const Home = () => {
-  const currentUser = useSelector(selectCurrentUser);
+    const currentUser = useSelector(selectCurrentUser);
 
-  return (
-    <>
-      <FirebaseAuthProvider>
-        <ThemeProvider theme={theme}>
-          <NavBar>
+    return (
+        <>
             {currentUser ? <h1>Welcome {currentUser.email}</h1> : <LoginPage />}
-          </NavBar>
-        </ThemeProvider>
-      </FirebaseAuthProvider>
-    </>
-  );
+        </>
+    );
 };
 
 export default Home;
