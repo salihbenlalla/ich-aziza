@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import firebase from 'firebase';
+import { db } from '../../firebase/firebaseConfig';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
     Card,
@@ -26,6 +28,13 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 //import MUI colors
 import { red } from '@material-ui/core/colors';
 
+export type PostProps = {
+    postText: string;
+    imageDownloadURL: string;
+    uid: string | undefined;
+    date: firebase.firestore.Timestamp;
+};
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -34,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         media: {
             height: 0,
-            paddingTop: '56.25%', // 16:9
+            paddingTop: '56.25%',
         },
         avatar: {
             backgroundColor: red[500],
@@ -47,37 +56,88 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingTop: theme.spacing(1),
             paddingBottom: theme.spacing(1),
         },
+        name: {
+            marginBottom: theme.spacing(0.5),
+            fontSize: '0.9rem',
+            fontWeight: 600,
+            '&:hover': {
+                textDecoration: 'underline rgba(0, 0, 0, 0.87)',
+            },
+        },
+        timePosted: {
+            fontSize: '0.7rem',
+            color: '#999',
+        },
+        cardHeader: {
+            height: theme.spacing(3),
+        },
+        commentText: {
+            fontSize: '0.8rem',
+        },
     })
 );
 
-export default function Post() {
-    const classes = useStyles();
+const Post: React.FC<PostProps> = ({
+    postText,
+    imageDownloadURL,
+    uid,
+    date,
+}) => {
+    const [user_first_name, setUser_first_name] = useState('');
+    const [user_last_name, setUser_last_name] = useState('');
+    const [profilePhotoURL, setProfilePhotoURL] = useState('');
 
+    useEffect(() => {
+        (async () => {
+            db.collection('users')
+                .doc(uid)
+                .get()
+                .then((doc) => {
+                    setUser_first_name(doc.data()?.first_name);
+                    setUser_last_name(doc.data()?.last_name);
+                    setProfilePhotoURL(doc.data()?.profilePhotoURL);
+                });
+        })();
+    }, []);
+
+    const classes = useStyles();
     return (
         <>
             <Card className={classes.root}>
                 <CardHeader
+                    className={classes.cardHeader}
                     avatar={
-                        <Avatar
-                            src="/profile-image.jpg"
-                            aria-label="recipe"
-                            className={classes.avatar}
-                        >
-                            R
-                        </Avatar>
+                        <MuiLink href={'profile/' + uid}>
+                            <Avatar
+                                src={profilePhotoURL}
+                                aria-label="recipe"
+                                className={classes.avatar}
+                            >
+                                {user_first_name.slice(0, 1)}
+                            </Avatar>
+                        </MuiLink>
                     }
                     action={
                         <IconButton aria-label="settings">
                             <MoreVertIcon />
                         </IconButton>
                     }
-                    title="Benlalla Salih"
-                    subheader="August 12, 2021"
-                />
-                <CardMedia
-                    className={classes.media}
-                    image="/paella.jpg"
-                    title="Paella dish"
+                    title={
+                        <MuiLink href={'profile/' + uid}>
+                            <Typography
+                                variant="h3"
+                                color="textPrimary"
+                                className={classes.name}
+                            >
+                                {user_first_name + ' ' + user_last_name}
+                            </Typography>
+                        </MuiLink>
+                    }
+                    subheader={
+                        <Typography variant="h3" className={classes.timePosted}>
+                            {date}
+                        </Typography>
+                    }
                 />
                 <CardContent>
                     <Typography
@@ -85,11 +145,16 @@ export default function Post() {
                         color="textPrimary"
                         component="p"
                     >
-                        This impressive paella is a perfect party dish and a fun
-                        meal to cook together with your guests. Add 1 cup of
-                        frozen peas along with the mussels, if you like.
+                        {postText}
                     </Typography>
                 </CardContent>
+                <Divider variant="fullWidth" />
+                <CardMedia
+                    className={classes.media}
+                    image={imageDownloadURL}
+                    title="Paella dish"
+                />
+
                 <Divider variant="fullWidth" />
                 <CardActions
                     disableSpacing
@@ -148,13 +213,14 @@ export default function Post() {
                             </Grid>
                             <Grid item>
                                 <Typography
-                                    variant="body2"
+                                    className={classes.commentText}
+                                    variant="body1"
                                     color="textSecondary"
                                     component="p"
                                 >
-                                    Heat 1/2 cup of the broth in a pot until
-                                    simmering, add saffron and set aside for 10
-                                    minutes.
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit. Voluptates debitis at quae
+                                    minima corporis ...
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -213,4 +279,6 @@ export default function Post() {
             </Card>
         </>
     );
-}
+};
+
+export default Post;

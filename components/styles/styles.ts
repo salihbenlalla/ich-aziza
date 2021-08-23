@@ -34,16 +34,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 700,
         marginLeft: theme.spacing(1),
     },
-    toolBar: {
-        backgroundColor: '#fff',
-    },
-    appBar: {
-        boxShadow: '0',
-        borderBottom: '1px solid #E0E0E0',
-    },
-    navbarMarginTop: {
-        marginTop: '3rem',
-    },
+
     loginCoverDiv: {
         margin: 0,
         padding: 0,
@@ -63,43 +54,6 @@ const useStyles = makeStyles((theme) => ({
     },
     marginZero: {
         margin: 0,
-    },
-    profileImageSectionBox: {
-        color: 'white',
-        height: 300,
-        backgroundImage: `url(${'/profileCover.jpg'})`,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    profileImage: {
-        width: 100,
-        height: 100,
-    },
-    profileImageSectionStats: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: 200,
-        '& span': {
-            textAlign: 'center',
-        },
-    },
-    profileName: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-    },
-    aboutCardItems: {
-        marginBottom: '1rem',
-    },
-    aboutCardSubtitles: {
-        color: '#999',
-        fontSize: '0.9rem',
-    },
-    aboutCardSubtitlesDescription: {
-        color: 'blackBright',
-        fontWeight: 700,
-        fontSize: '0.9rem',
     },
 }));
 

@@ -5,7 +5,7 @@ import {
     Divider,
     Typography,
 } from '@material-ui/core';
-import { useStyles } from '../styles/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 const cardData = [
     {
@@ -29,6 +29,23 @@ const cardData = [
         description: 'cats',
     },
 ];
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        aboutCardItems: {
+            marginBottom: '1rem',
+        },
+        aboutCardSubtitles: {
+            color: '#999',
+            fontSize: '0.9rem',
+        },
+        aboutCardSubtitlesDescription: {
+            color: 'blackBright',
+            fontWeight: 600,
+            fontSize: '0.9rem',
+        },
+    })
+);
 
 const AboutCard = () => {
     const classes = useStyles();

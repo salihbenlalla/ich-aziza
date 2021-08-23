@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         name: {
             fontSize: '0.9rem',
-            fontWeight: 700,
+            fontWeight: 600,
             color: 'blackBright',
         },
         username: {
