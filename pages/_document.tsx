@@ -37,8 +37,6 @@ MyDocument.getInitialProps = async (ctx) => {
 
     const initialProps = await Document.getInitialProps(ctx);
 
-    console.log(React.Children.toArray(initialProps.styles));
-
     return {
         ...initialProps,
         styles: [

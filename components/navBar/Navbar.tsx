@@ -60,6 +60,11 @@ const useStyles = makeStyles((theme: Theme) =>
             marginLeft: theme.spacing(0.5),
             fontSize: '1rem',
         },
+        logoText: {
+            '&:hover': {
+                textDecoration: 'underline #fff',
+            },
+        },
     })
 );
 
@@ -73,7 +78,11 @@ const Navbar: React.FC<NavBarProps> = ({ children }) => {
         <>
             <AppBar elevation={0} className={classes.appBar}>
                 <Toolbar variant="dense" className={classes.toolBar}>
-                    <IconButton edge="start" color="primary">
+                    <IconButton
+                        edge="start"
+                        color="primary"
+                        onClick={() => router.push('/')}
+                    >
                         <ScatterPlotIcon />
                     </IconButton>
                     <Grid
@@ -83,9 +92,15 @@ const Navbar: React.FC<NavBarProps> = ({ children }) => {
                         alignItems="center"
                     >
                         <Grid item xs>
-                            <Typography variant="h6" color="textPrimary">
-                                IchAziza
-                            </Typography>
+                            <MuiLink href="/">
+                                <Typography
+                                    variant="h6"
+                                    color="textPrimary"
+                                    className={classes.logoText}
+                                >
+                                    IchAziza
+                                </Typography>
+                            </MuiLink>
                         </Grid>
                         <Grid item>
                             {currentUser && (

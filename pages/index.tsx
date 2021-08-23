@@ -4,6 +4,8 @@ import { selectCurrentUser } from '../redux';
 import Posts from '../components/profile/Posts';
 import { Grid, Container } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { auth } from '../firebase/firebaseAdmin';
+import { NextPageContext } from 'next';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -13,13 +15,18 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Home = () => {
+interface PageProps {
+    uid: string | null | undefined;
+    children?: React.ReactNode;
+}
+
+const Home: React.FC<PageProps> = ({ uid }) => {
     const currentUser = useSelector(selectCurrentUser);
     const classes = useStyles();
 
     return (
         <>
-            {currentUser ? (
+            {currentUser || uid ? (
                 <Container
                     maxWidth="lg"
                     disableGutters
@@ -43,3 +50,31 @@ const Home = () => {
 };
 
 export default Home;
+
+//get cookie from context.req?.headers.cookie
+function getCookie(name: string, cookieObj: string) {
+    var nameEQ = name + '=';
+    var ca = cookieObj.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+export async function getServerSideProps(context: NextPageContext) {
+    const cookie = context.req?.headers.cookie;
+    const firebaseToken = cookie ? getCookie('firebaseToken', cookie) : '';
+    let decodedToken = { uid: null };
+    try {
+        decodedToken = await auth.verifyIdToken(firebaseToken);
+    } catch (error) {}
+    const uid = decodedToken.uid;
+
+    return {
+        props: {
+            uid: uid,
+        },
+    };
+}

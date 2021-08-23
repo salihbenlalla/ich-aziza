@@ -106,49 +106,35 @@ const AddPost = () => {
                 .put(image, metaData);
 
             uploadTask.on(
-                firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+                firebase.storage.TaskEvent.STATE_CHANGED,
                 (snapshot) => {
-                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                     let progress =
                         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     setProgressValue(progress);
-                    console.log('Upload is ' + progress + '% done');
-                    switch (snapshot.state) {
-                        case firebase.storage.TaskState.PAUSED: // or 'paused'
-                            console.log('Upload is paused');
-                            break;
-                        case firebase.storage.TaskState.RUNNING: // or 'running'
-                            console.log('Upload is running');
-                            break;
-                    }
                 },
                 (error) => {
-                    // A full list of error codes is available at
-                    // https://firebase.google.com/docs/storage/web/handle-errors
                     switch (error.code) {
                         case 'storage/unauthorized':
-                            // User doesn't have permission to access the object
+                            console.log(
+                                'you are not authorized to upload images!'
+                            );
                             break;
                         case 'storage/canceled':
-                            // User canceled the upload
+                            console.log('upload task is canceled!');
                             break;
 
-                        // ...
-
                         case 'storage/unknown':
-                            // Unknown error occurred, inspect error.serverResponse
+                            console.log('unknown error has occured!');
                             break;
                     }
                 },
                 () => {
-                    // Upload completed successfully, now we can get the download URL
                     uploadTask.snapshot.ref
                         .getDownloadURL()
                         .then((downloadURL) => {
                             submitTextHandler(postText, downloadURL);
 
                             if (firebase.storage.TaskState.SUCCESS) {
-                                console.log('Upload succeded!');
                                 RemovePreviewImage();
                                 setPostText('');
                                 setProgressBarShow(false);
@@ -171,11 +157,7 @@ const AddPost = () => {
             uid: auth.currentUser?.uid,
             date: firebase.firestore.Timestamp.now(),
         };
-        const submitTextHandlerResult = await db
-            .collection('posts')
-            .doc()
-            .set(post);
-        console.log('submitTextHandlerResult: ', submitTextHandlerResult);
+        await db.collection('posts').doc().set(post);
     };
 
     const RemovePreviewImage = () => {

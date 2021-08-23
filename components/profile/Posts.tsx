@@ -8,6 +8,7 @@ import AddPost from '../post/AddPost';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../redux';
 import { selectAddPostEvent } from '../../redux';
+import { useRouter } from 'next/dist/client/router';
 
 const formatDate = (date: Date) => {
     const months = [
@@ -65,6 +66,8 @@ const Posts: React.FC<PostsProps> = ({ profileId }) => {
     const currentUser = useSelector(selectCurrentUser);
     const [posts, setPosts] = useState<any>([]);
     const addPostEvent = useSelector(selectAddPostEvent);
+    const router = useRouter();
+
     useEffect(() => {
         (async () => {
             const postsData = await getPosts(profileId);
@@ -73,7 +76,8 @@ const Posts: React.FC<PostsProps> = ({ profileId }) => {
     }, [addPostEvent]);
     return (
         <>
-            {currentUser?.uid === profileId && <AddPost />}
+            {(currentUser?.uid === profileId ||
+                (!router.query.uid && currentUser)) && <AddPost />}
 
             <Typography component="h2" variant="h6">
                 Posts
