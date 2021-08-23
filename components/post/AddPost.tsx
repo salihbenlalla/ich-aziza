@@ -56,10 +56,6 @@ const useStyles = makeStyles((theme: Theme) =>
             left: 5,
             color: 'white',
             cursor: 'pointer',
-            // backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            // borderRadius: '50%',
-            // margin: 0,
-            // padding: 0,
         },
         AddPosticons: {
             marginRight: 8,
