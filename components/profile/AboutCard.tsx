@@ -17,16 +17,8 @@ const cardData = [
         description: 'ministère des finances',
     },
     {
-        subTitle: 'loves:',
+        subTitle: 'Hobbies:',
         description: 'programming & web development',
-    },
-    {
-        subTitle: 'preferred food :',
-        description: 'banana, tacos, & everything',
-    },
-    {
-        subTitle: 'preferred pet:',
-        description: 'cats',
     },
 ];
 
