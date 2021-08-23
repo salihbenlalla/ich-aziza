@@ -65,11 +65,15 @@ function getCookie(name: string, cookieObj: string) {
 
 export async function getServerSideProps(context: NextPageContext) {
     const cookie = context.req?.headers.cookie;
-    const firebaseToken = cookie ? getCookie('firebaseToken', cookie) : '';
+    const firebaseToken = cookie ? getCookie('firebaseToken', cookie) : null;
     let decodedToken = { uid: null };
-    try {
-        decodedToken = await auth.verifyIdToken(firebaseToken);
-    } catch (error) {}
+    if (firebaseToken) {
+        try {
+            decodedToken = await auth.verifyIdToken(firebaseToken);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const uid = decodedToken.uid;
 
     return {
