@@ -6,6 +6,7 @@ import { Grid, Container } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { auth } from '../firebase/firebaseAdmin';
 import { NextPageContext } from 'next';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
